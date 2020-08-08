@@ -31,6 +31,11 @@
       }).then(function(result) {
       alert(result); 
       });
+      
+      //************************Error in Promises*************************************
+      fetch('https://noserver') 
+     .then(response => response.json())
+     .catch(err => alert(err))
     </script>
   </body>
 </html>
