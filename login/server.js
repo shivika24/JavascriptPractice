@@ -20,6 +20,7 @@ var router = express.Router();
 
 app.get('/', (req, res) => res.send('ho!'))
 app.post('/register',login.register);
+app.post('/login',login.login);
 
 app.listen(8082,()=>{ 
     console.log("Server is Listening At Port 8082")  
