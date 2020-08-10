@@ -4,6 +4,18 @@ var con= require('../dbconnection');
 const config=require('config');
 const jwt=require('jsonwebtoken');
 
+module.exports.getuser = async function(req,res){
+    con.query("SELECT * FROM user", function(err , data){
+        if(err){
+            console.log(err); 
+        } 
+        else
+        {
+            res.send({"data":data})
+        }
+    })
+}
+
 module.exports.register = async function(req,res){
     const password = req.body.password;
     const repassword = req.body.repassword;
@@ -28,7 +40,8 @@ module.exports.register = async function(req,res){
                 "failed":"User Already Registered"
               })
              }else{
-              var sql = "INSERT INTO `user`(`name`,`email`,`password`,`repassword`) VALUES ('" + users.name + "','" + users.email + "','" + users.password + "','" + users.repassword + "')";
+              var d=new Date().toISOString().slice(0, 19).replace('T',' ');
+              var sql = "INSERT INTO `user`(`name`,`email`,`password`,`dateTime`) VALUES ('" + users.name + "','" + users.email + "','" + users.password  + "','" + d + "')";
               var query = con.query(sql, function(err, result) {  
                 if (err) {
                   res.send({
@@ -94,3 +107,66 @@ module.exports.register = async function(req,res){
           }
           });
         }
+
+    module.exports.deleteuser = async function(req,res){
+        con.query('DELETE FROM user WHERE email = ?', req.body.email, function(err , data){
+            if(err){
+                console.log(err); 
+            } 
+            else
+            {
+                res.send({"response":'USER DELETED SUCCESSFULLY'})
+            }
+            })
+        }
+
+        module.exports.edituser = async function(req,res){
+            var users={
+                "name":req.body.name,
+                "email":req.body.email,
+              }
+            if(users.name&&req.body.password)
+            {
+            const password11 = req.body.password;
+            const encryptedPassword11 = await bcrypt.hash(password11, 10);
+            var myquery = "UPDATE user SET name = '"+users.name+"' AND password = '"+encryptedPassword11+"' WHERE email = '"+users.email+"'";
+            con.query(myquery, function(err , data){
+                if(err){
+                    console.log(err); 
+                } 
+                else
+                {
+                    res.send({"response":'BOTH EDITED SUCCESSFULLY'})
+                }
+                })
+            }
+            else if(users.name)
+            {
+            var myquery = "UPDATE user SET name = '"+users.name+"' WHERE email = '"+users.email+"'";
+            con.query(myquery, function(err , data){
+                if(err){
+                    console.log(err); 
+                } 
+                else
+                {
+                    res.send({"response":'NAME EDITED SUCCESSFULLY'})
+                }
+                })
+            }
+            else if(req.body.password)
+            {
+                const password11 = req.body.password;
+                const encryptedPassword11 = await bcrypt.hash(password11, 10);
+                console.log(encryptedPassword11)
+                var query1 = "UPDATE user SET password = '"+encryptedPassword11+"' WHERE email = '"+users.email+"'";
+                con.query(query1, function(err , data){
+                if(err){
+                    console.log(err); 
+                } 
+                else
+                {
+                    res.send({"response":'PASSWORD EDITED SUCCESSFULLY'})
+                }
+                })
+            }
+            }
