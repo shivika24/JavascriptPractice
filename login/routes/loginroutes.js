@@ -1,8 +1,7 @@
 var bcrypt = require ('bcrypt');
 const saltRounds=10;
 var con= require('../dbconnection');
-const config=require('config');
-const jwt=require('jsonwebtoken');
+
 
 module.exports.getuser = async function(req,res){
     con.query("SELECT * FROM user", function(err , data){
@@ -22,12 +21,10 @@ module.exports.register = async function(req,res){
     if(password==repassword)
     {
       const encryptedPassword = await bcrypt.hash(password, 10);
-      const encryptedPassword1 = await bcrypt.hash(repassword, 10)
       var users={
          "name":req.body.name,
          "email":req.body.email,
-         "password":encryptedPassword,
-         "repassword":encryptedPassword1
+         "password":encryptedPassword
        }
       con.query("SELECT COUNT(*) AS cnt FROM user WHERE email = ? " , users.email , function(err , data){
          if(err){
@@ -56,7 +53,7 @@ module.exports.register = async function(req,res){
                   }
               });  
             }       
-             }
+            }
       })     
     }
     else
@@ -83,8 +80,7 @@ module.exports.register = async function(req,res){
               console.log(password);        
               let comparision = await bcrypt.compare(password, results[0].password)
               console.log(comparision);
-              if(comparision){
-               
+              if(comparision){               
                   res.send({
                     "code":204,
                     "success":"Email and password match"
