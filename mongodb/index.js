@@ -8,7 +8,7 @@ const authRoute =   require('./routes/auth')
 
 //CONNECT TO MONGODB
 dotenv.config();
-mongoose.connect("mongodb+srv://Shivika:9914725750@cluster0.fkhxe.mongodb.net/<Login-Register>?retryWrites=true&w=majority",{ useNewUrlParser: true,useUnifiedTopology: true },
+mongoose.connect("mongodb+srv://Shivika:9914725750@cluster0.fkhxe.mongodb.net/Login-Register?retryWrites=true&w=majority",{ useNewUrlParser: true,useUnifiedTopology: true },
 ()=>console.log('connected to mongodb!')
 );
 

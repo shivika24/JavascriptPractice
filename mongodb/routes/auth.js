@@ -84,4 +84,12 @@ router.put('/updateuser', async (req,res)=> {
       });   
 
 })
+
+router.get('/aggregate' , async (req,res)=> {  //Aggregate is like group By in sql
+    const data = await User.aggregate([
+        { $match: { name: "shivikaa" } },
+        { $group: {_id: "$name",total: { $sum: "$age" } } }
+     ])
+    res.send(data)
+}) 
 module.exports  =   router;
