@@ -75,9 +75,7 @@ module.exports.register = async function(req,res){
               "failed":"error ocurred"
             })
           }else{
-            if(results.length >0){
-              console.log(results[0].password);
-              console.log(password);        
+            if(results.length >0){    
               let comparision = await bcrypt.compare(password, results[0].password)
               console.log(comparision);
               if(comparision){               
